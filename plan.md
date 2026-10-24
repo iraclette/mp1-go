@@ -44,7 +44,7 @@ We don't have any GUI (graphical user interface) to keep track of the current po
 
 ## What can be used to simplify our task
 
-Since technically we only take into account points, rather than the grid itself, we can keep track of the board using a 2D array, such as `char board[19][19]`. Why `char`? Honestly, no clue... I mean, we can just use E for empty, B for black and W for white.
+Since technically we only take into account points, rather than the grid itself, we can keep track of the board using a 2D array, such as `char board[19][19]`. Why `char`? Honestly, no clue... I mean, we can just use + for empty (for visual purposes), B for black and W for white.
 
 Since the game ends only when both players have passed, coding the ending phase of the game will be a lot easier than for chess. However it would mean that the entire game would be inside one huge `if` statement.
 
@@ -96,6 +96,36 @@ This seems to be rather sufficient for a first submission, given the time frame.
 
 First we would add the actual stones in the grid printing.
 
+We should also add the possibility for a pass. And if both players passed, the game will end.
+
 Then we could, instead of asking the players for separate, explicit coordinates, that align with our interests, so using the 0-18 array notations, we could ask them to use the conventional coordinate system (Letters 'A' through 'T', skipping 'I' to avoid visual confusion, and a number after it, so instead of asking for `"%d %d"`, we could ask for `"%s"` that we separate and use as we need, obviously we check that it follows a guideline that we will force.
 
+Something that will be rather difficult to implement would be the chains, but the question is : do we actually need to know where and how long each chain is. Initially my plan was to remember every single chain, and then somehow count the territories, but then it occured to me, why not use the direct definition of a territory to keep the score? We will have to cover the entire board hundreds of times though, so we will need to figure out a way to reduce redundant passages as much as possible.
 
+We need to figure out a way to prevent illegal plays, aka the ko rule. Now one way to implement it would be to remember the entire board throughout the entire game and compare the current one every single one before hand, but that will get disgustingly slow, considering that we are using 2D arrays and the amount of used positions grows after every move, each verification would take longer and longer, until it becomes just unplayable. 
+(After quite some research) 
+Figured it out! We are going to hash the game board instead of using a 2D array, now bare with me, we will be transforming this 2D array into a uint_64t, and use something that genuine Go engines use, the zobrist table.
+
+**What is this zobrist table and how does it work?**
+
+In very very short, it's a technique invented in 1970 used to record game positions of these types of games, like chess, go, checkers and so on, into a singular unique 64-bit integer. The way it's set up is as follows:
+
+We create a 3 dimensional array, `zobrist[19][19][2]`, consisting of unique, random hashes of 64-bit integers. We would then use the binary operation XOR to keep track of what was played. The XOR operation is its own inverse, which will facilitate the capture phase. Basically we take the current hash, which would be 0, and XOR to it the zobrist table hash, as well as the turn token, so the math gives us that 
+```c
+uint64_t current_hash = 0;
+uint64_t zobrist[19][19][2];
+uint64_t turn_hash;
+current_hash ^= zobrist[x][y][BLACK];
+current_hash ^= turn_hash;
+```
+Here's the fun part, C doesn't have a genuine random hash generation, but there are a few alternatives we could use.
+
+To keep track of the positional superko rule (which states that at no moment are we allowed to recreate a position that was previously played), we can just create a simple array of every past position, rather simple.
+
+### Optional additions that could be really interesting to try out
+
+Different board sizes, so like, in the beginning we ask the players for a board dimension (9, 13 or 19).
+
+Graphical improvements : instead of having just plain lines and letters, why not try and print the board like ASCII art? that would be in the very end though.
+
+A Go engine that we can play against...
