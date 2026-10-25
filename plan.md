@@ -129,3 +129,22 @@ Different board sizes, so like, in the beginning we ask the players for a board 
 Graphical improvements : instead of having just plain lines and letters, why not try and print the board like ASCII art? that would be in the very end though.
 
 A Go engine that we can play against...
+
+## Additional research that could prove useful
+
+### Go engine
+
+Alright so Im about to lose my shit, I've looked into how one could make a Go engine purely in C, without any machine learning stuff from python, and this is insanity. Basically, we should be using pure Monte Carlo Tree Search, which just means, try everything out, and pick the best choice. Obviously this is just insane, on first glance it looks like we have to generate every single combination of moves, which will take so much time, given that it will increase nearly exponentially in the very beginning, since we start off with an empty board.
+There are multiple ways of optimizing this apparently, the most recommended one being parrallelization, aka, running multiple simulations at the same time across CPU/GPU cores.
+Now here's the thing, you would think that the very first move would make the engine simulate every single outcome, but that's not the case apparently (?) because there are more Go positions than atoms in the universe.
+There are multiple ways of avoiding this, firstly, MCTS only picks and simulates one specific path to the very end, and doesn't remember a thing about every single one of these moves, it only remembers "ah yes, this move wins me the game, how? no idea. I just know it does" basically. 
+We can also cap the budget of this algorithm, we just say "ykw, rollout 5000 times, and then ditch the rest" or "go on for 100ms, and then give it up", that way, the algorithm doesn't eat RAM like the current AI data centers.
+Now for the especially boring part : the math behind it.
+$$
+UCT = \frac{W_i}{N_i} + c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}
+$$
+
+This formula splits a move's worth into two distinct forces that balance eachother :
+Force A $\frac{W_i}{N_i}$ is the current winrate of the move, with $W_i$ being the wins, and ${N_i}$ being the times it was simulated, so if a move has a high win rate, then the UCT score will skyrocket, and the algo will say "hey this works, let's look a lot more into it to find exact moves"
+Force B $c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}$ its the urgency injected into unvisited moves. Basically, motivation to explore more that just a few moves. So if a move has never been visited, the math will evaluate it to infinity, so it will force the algorithm to explore this move, and the constant c is a random multiplier we will set, the higher it is, the more open minded the algorithm is.
+
