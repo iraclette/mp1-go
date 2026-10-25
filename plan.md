@@ -140,11 +140,25 @@ Now here's the thing, you would think that the very first move would make the en
 There are multiple ways of avoiding this, firstly, MCTS only picks and simulates one specific path to the very end, and doesn't remember a thing about every single one of these moves, it only remembers "ah yes, this move wins me the game, how? no idea. I just know it does" basically. 
 We can also cap the budget of this algorithm, we just say "ykw, rollout 5000 times, and then ditch the rest" or "go on for 100ms, and then give it up", that way, the algorithm doesn't eat RAM like the current AI data centers.
 Now for the especially boring part : the math behind it.
-$$
+
+```math
 UCT = \frac{W_i}{N_i} + c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}
-$$
+```
 
 This formula splits a move's worth into two distinct forces that balance eachother :
-Force A $\frac{W_i}{N_i}$ is the current winrate of the move, with $W_i$ being the wins, and ${N_i}$ being the times it was simulated, so if a move has a high win rate, then the UCT score will skyrocket, and the algo will say "hey this works, let's look a lot more into it to find exact moves"
-Force B $c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}$ its the urgency injected into unvisited moves. Basically, motivation to explore more that just a few moves. So if a move has never been visited, the math will evaluate it to infinity, so it will force the algorithm to explore this move, and the constant c is a random multiplier we will set, the higher it is, the more open minded the algorithm is.
+Force A
+
+```math
+\frac{W_i}{N_i}
+```
+
+is the current winrate of the move, with $W_i$ being the wins, and $N_i$ being the times it was simulated, so if a move has a high win rate, then the UCT score will skyrocket, and the algo will say "hey this works, let's look a lot more into it to find exact moves"
+
+Force B
+
+```math
+c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}
+```
+
+its the urgency injected into unvisited moves. Basically, motivation to explore more that just a few moves. So if a move has never been visited, the math will evaluate it to infinity, so it will force the algorithm to explore this move, and the constant c is a random multiplier we will set, the higher it is, the more open minded the algorithm is.
 
