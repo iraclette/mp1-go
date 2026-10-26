@@ -141,24 +141,34 @@ There are multiple ways of avoiding this, firstly, MCTS only picks and simulates
 We can also cap the budget of this algorithm, we just say "ykw, rollout 5000 times, and then ditch the rest" or "go on for 100ms, and then give it up", that way, the algorithm doesn't eat RAM like the current AI data centers.
 Now for the especially boring part : the math behind it.
 
-```math
+$$
 UCT = \frac{W_i}{N_i} + c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}
-```
+$$
 
 This formula splits a move's worth into two distinct forces that balance eachother :
-Force A
+Force A $\frac{W_i}{N_i}$ is the current winrate of the move, with $W_i$ being the wins, and ${N_i}$ being the times it was simulated, so if a move has a high win rate, then the UCT score will skyrocket, and the algo will say "hey this works, let's look a lot more into it to find exact moves"
+Force B $c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}$ its the urgency injected into unvisited moves. Basically, motivation to explore more that just a few moves. So if a move has never been visited, the math will evaluate it to infinity, so it will force the algorithm to explore this move, and the constant c is a random multiplier we will set, the higher it is, the more open minded the algorithm is.
 
-```math
-\frac{W_i}{N_i}
-```
+**The logic behind every MCTS engine**
+1. Selection: we start at the root (so basically the current board) and look at the available moves. We then evaluate the Upper Confidence Bound for Trees (UCT) for each child (each potential move). We then pick the highest score and move to that node, repeating it until we hit a node that has yet to be explored.
+2. Expansion: Once we hit the edge of a known tree, pick one move and create a permanent new node in memory.
+3. Simulation: From this brand new node, we dont update memory at all, we just randomly make moves until the game ends.
+4. Backpropagation (passing the final result backwards up the tree to update memory of every node that led to the outcome): We add 1 to the node's `total_visits`, and if it was a win, add 1 to its `total_wins`.
 
-is the current winrate of the move, with $W_i$ being the wins, and $N_i$ being the times it was simulated, so if a move has a high win rate, then the UCT score will skyrocket, and the algo will say "hey this works, let's look a lot more into it to find exact moves"
+I mean, on paper it seems simple enough, but doing this in C seems like a nightmare... `struct`s are a must, that much I know.
+We will also need to use memory allocation with `malloc`, given that it isn't a simple topic, I don't expect us to start on it from the very beginning, matter of fact we shouldn't, but hey, always fun to try stuff.
 
-Force B
+** Floodfill search**
 
-```math
-c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}
-```
+During this search, we track the stones in the group, so that we can delete them if captured, and we also track the liberties, so everytime we reach an empty point, we count it as a liberty.
 
-its the urgency injected into unvisited moves. Basically, motivation to explore more that just a few moves. So if a move has never been visited, the math will evaluate it to infinity, so it will force the algorithm to explore this move, and the constant c is a random multiplier we will set, the higher it is, the more open minded the algorithm is.
+So how does it work : we tag the current stone, and check all 4 directions and based on what we see, we do one of the following:
+- *if we see an empty point* we label it as a liberty.
+- *if we see a stone of the same color* the focus shifts to it, and we repeat the exact same process from step 1.
+- *if we see an edge or an opponent stone* we ignore it.
 
+We have to prevent echos, so if stone A touches stone B, we shift our focus to stone B, which will check stone A, where we shift our focus, in a loop. For this reason we will keep a `visited_stones` array.
+
+For chains that loop around, by this very naive algorithm, we will mark the same liberty several times, to avoid that, we will also mark the liberties as counted.
+
+For the rest, we really ought to start working on this, have some base and then implement all of this complicated af math/logic.
