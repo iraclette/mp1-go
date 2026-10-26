@@ -158,7 +158,7 @@ Force B $c \cdot \sqrt{\frac{\ln(N_{total})}{N_i}}$ its the urgency injected int
 I mean, on paper it seems simple enough, but doing this in C seems like a nightmare... `struct`s are a must, that much I know.
 We will also need to use memory allocation with `malloc`, given that it isn't a simple topic, I don't expect us to start on it from the very beginning, matter of fact we shouldn't, but hey, always fun to try stuff.
 
-** Floodfill search**
+**Floodfill search**
 
 During this search, we track the stones in the group, so that we can delete them if captured, and we also track the liberties, so everytime we reach an empty point, we count it as a liberty.
 
