@@ -2,21 +2,14 @@
 #include "./main.c"
 #include <stdio.h>
 
-#define VIDE 0
-#define NOIR 1
-#define BLANC 2
+#define VIDE 2
+#define NOIR 0
+#define BLANC 1
 #define TAILLE 19
 
-int main() {
-    int plateau[TAILLE][TAILLE];
-    int joueuractuel = NOIR;
+int plateau[TAILLE][TAILLE];
 
-    for (int i = 0; i < TAILLE; i++) {
-        for (int j = 0; j < TAILLE; j++) {
-            plateau[i][j] = VIDE;
-        }
-    }
-
+void printGrid(){
     printf("   ");
     for (int j = 0; j < TAILLE; j++) {
         char lettre = 'A' + j;
@@ -45,12 +38,29 @@ int main() {
         printf("\n");
     }
 
+}
+
+int main() {
+
+    int joueuractuel = NOIR;
+
+    for (int i = 0; i < TAILLE; i++) {
+        for (int j = 0; j < TAILLE; j++) {
+            plateau[i][j] = VIDE;
+        }
+    }
+
+
+    printGrid();
     setup();
     char choixPasser;
     char confirmation;
     int tourPasse = 0;
 
-    printf("Joueur %d, voulez-vous passer votre tour ? (Y/N) : ", joueuractuel);
+
+
+    while(tourPasse<2)
+   { printf("Joueur %d, voulez-vous passer votre tour ? (Y/N) : ", joueuractuel);
     scanf(" %c", &choixPasser);
 
     if (choixPasser == 'Y' || choixPasser == 'y') {
@@ -60,23 +70,27 @@ int main() {
 
         if (confirmation == 'P' || confirmation == 'p') {
             printf("Joueur %d passe son tour.\n", joueuractuel);
-            tourPasse = 1;
+
         }
-    }
+        joueuractuel^=1;
+        tourPasse ++;
+    } else if(choixPasser == 'N' || confirmation == 'n')
+        {
+            tourPasse==0;
+
+
 
     if (tourPasse == 0) {
         char lettresaisie;
         int ligneSaisie;
 
-        printf("Entrez la lettre de la colonne (A-T): ");
-        scanf(" %c", &lettresaisie);
+        printf("Entrez les Coordonnees de votre choix : ");
+        scanf(" %c%d", &lettresaisie, &ligneSaisie);
 
         if (lettresaisie >= 'a' && lettresaisie <= 'z') {
             lettresaisie = lettresaisie - 32;
         }
 
-        printf("Entrez le chiffre de la ligne (1-%d): ", TAILLE);
-        scanf("%d", &ligneSaisie);
 
         int j = lettresaisie - 'A';
         if (lettresaisie >= 'J') {
@@ -84,6 +98,7 @@ int main() {
         }
 
         int i = ligneSaisie - 1;
+        printf("%c %d\n", lettresaisie, ligneSaisie);
 
         if (i >= 0 && i < TAILLE && j >= 0 && j < TAILLE) {
 
@@ -96,7 +111,11 @@ int main() {
         } else {
             printf("Erreur : Coordonnees hors du plateau !\n");
         }
+        printGrid();
+        joueuractuel ^= 1;
     }
+   }
 
+   }
     return 0;
 }

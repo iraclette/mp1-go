@@ -54,7 +54,9 @@ void copyString(char destination[], char source[]){
  * This is to print the actual grid of the game
  * Imagine the current_table as a matrix (you've seen matrices... right?)
  * with `i` being its row index and `j` being its column
- */
+ * */
+
+
 
 void setup(){
     // for now, the grid will be using `+` to mark an empty intersection
