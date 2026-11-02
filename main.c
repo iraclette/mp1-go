@@ -56,14 +56,7 @@ void copyString(char destination[], char source[]){
  * with `i` being its row index and `j` being its column
  * */
 
-void printGrid(){
-    for (int i=0; i<DIM; i++){
-        for (int j=0; j<DIM; j++){
-            printf("%c", current_table[i][j]);
-        }
-        printf("\n");
-    }
-}
+
 
 void setup(){
     // for now, the grid will be using `+` to mark an empty intersection
