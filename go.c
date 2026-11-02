@@ -62,7 +62,7 @@ int main() {
     while(tourPasse<2)
    { printf("Joueur %d, voulez-vous passer votre tour ? (Y/N) : ", joueuractuel);
     scanf(" %c", &choixPasser);
-
+    printf("%d", tourPasse);
     if (choixPasser == 'Y' || choixPasser == 'y') {
         printf("Etes-vous sur ? (P = Passer / R = Rester) : ");
 
@@ -74,13 +74,8 @@ int main() {
         }
         joueuractuel^=1;
         tourPasse ++;
-    } else if(choixPasser == 'N' || confirmation == 'n')
+    } else if(choixPasser == 'N' || choixPasser == 'n')
         {
-            tourPasse==0;
-
-
-
-    if (tourPasse == 0) {
         char lettresaisie;
         int ligneSaisie;
 
@@ -112,9 +107,10 @@ int main() {
             printf("Erreur : Coordonnees hors du plateau !\n");
         }
         printGrid();
+        tourPasse=0;
         joueuractuel ^= 1;
     }
-   }
+
 
    }
     return 0;
