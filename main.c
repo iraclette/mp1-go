@@ -95,18 +95,3 @@ void setup(){
 
 }
 
-int main(){
-    setup();
-
-    if (current_turn == 1){
-        printf("%s please enter the coordinates of the desired stone placement: \n", black_name);
-        scanf("%d %d", &x, &y);
-        current_table[x-1][y-1] = 'B';
-    } else if(current_turn == 2) {
-        printf("%s please enter the coordinates of the desired stone placement: \n", white_name);
-        scanf("%d %d", &x, &y);
-        current_table[x-1][y-1] = 'W';
-    }
-
-    printGrid();
-}
