@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include "./helper.c"
+
+<<<<<<< HEAD
+int visite[TAILLE][TAILLE];
+int libertes = 0;
+
+void compterlibertes(int i, int j, int ma_couleur) {
+    if (i > 0 && visite[i - 1][j] == 0) {
+        visite[i - 1][j] = 1;
+        if ( plateau[i - 1][j] == VIDE) {
+            libertes++;
+        } else if (plateau[i - 1][j] == ma_couleur) {
+            compterlibertes(i - 1, j, ma_couleur);
+        }
+=======
+#define TAILLE 19
+#define VIDE 0
+#define NOIR 1
+#define BLANC 2
+
+
+void compterlibertes(int visite[TAILLE][TAILLE], int i, int j, int libertes)
+
+{if( i > 0 && visite[i-1][j]==0)
+    {
+        libertes++;
+    }
+    if(i < TAILLE - 1 && visite[i+1][j]==0)
+    {
+        libertes++;
+>>>>>>> 6df93001f6bf49e5370ab5765c224906b994eb24
+    }
+
+    if (i < TAILLE - 1 && visite[i + 1][j] == 0) {
+        visite[i + 1][j] = 1;
+        if (plateau[i + 1][j] == VIDE) {
+            libertes++;
+        } else if (plateau[i + 1][j] == ma_couleur) {
+            compterlibertes(i + 1, j, ma_couleur);
+        }
+    }
+
+    if (j > 0 && visite[i][j - 1] == 0) {
+        visite[i][j - 1] = 1;
+        if (plateau[i][j - 1] == VIDE) {
+            libertes++;
+        } else if (plateau[i][j - 1] == ma_couleur) {
+            compterlibertes(i, j - 1, ma_couleur);
+        }
+    }
+
+    if (j < TAILLE - 1 && visite[i][j + 1] == 0) {
+        visite[i][j + 1] = 1;
+        if (plateau[i][j + 1] == VIDE) {
+            libertes++;
+        } else if (plateau[i][j + 1] == ma_couleur) {
+            compterlibertes(i, j + 1, ma_couleur);
+        }
+    }
+}
+
+<<<<<<< HEAD
+int flood(int i, int j, int couleur) {
+    libertes = 0;
+    for (int i = 0; i < TAILLE; i++) {
+        for (int j = 0; j < TAILLE; j++) {
+            visite[i][j] = 0;
+=======
+
+
+if (i>0 && visite[i - 1][j] == 0)
+{
+        if( plateau[i-1][j]==VIDE)
+        {
+            (*libertes)++;
+        }
+        else if (plateau[i-1][j]== ma_couleur)
+        {
+            visite[i-1][j]= 1;
+
+            compter_libertes_groupe(plateau, i - 1, j, ma_couleur, visite, &libertes);
+        }
+}
+
+if (i < TAILLE - 1 && visite[i + 1][j] == 0) {
+    if (plateau[i + 1][j] == VIDE) {
+        (*libertes)++;
+    } else if (plateau[i + 1][j] == ma_couleur) {
+        visite[i + 1][j] = 1;
+        compter_libertes_groupe(plateau, i + 1, j, ma_couleur, visite, libertes);
+    }
+}
+
+if (j > 0 && visite[i][j - 1] == 0) {
+    if (plateau[i][j - 1] == VIDE) {
+        (*libertes)++;
+    } else if (plateau[i][j - 1] == ma_couleur) {
+        visite[i][j - 1] = 1;
+        compter_libertes_groupe(plateau, i, j - 1, ma_couleur, visite, libertes);
+    }
+}
+
+if (j < TAILLE - 1 && visite[i][j + 1] == 0) {
+    if (plateau[i][j + 1] == VIDE) {
+        (*libertes)++;
+    } else if (plateau[i][j + 1] == ma_couleur) {
+        visite[i][j + 1] = 1;
+        compter_libertes_groupe(plateau, i, j + 1, ma_couleur, visite, libertes);
+    }
+}
+
+
+
+
+int flood()
+{
+    int visite[TAILLE][TAILLE];
+    int libertes =0;
+
+    for(int i=0; i<TAILLE; i++)
+    {
+        for(int j=0; j<TAILLE; j++)
+        {
+            visite[i][j]=0;
+>>>>>>> 6df93001f6bf49e5370ab5765c224906b994eb24
+        }
+    }
+    visite[i][j] = 1;
+    compterlibertes(i, j, couleur);
+
+    return libertes;
+}
+<<<<<<< HEAD
+=======
+
+
+
+int main() {
+    int resultat = flood();
+    printf("Nombre de libertes trouvees : %d\n", resultat);
+    return 0;
+}
+
+>>>>>>> 6df93001f6bf49e5370ab5765c224906b994eb24
