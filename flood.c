@@ -39,20 +39,6 @@ void compterlibertes(int i, int j, int ma_couleur) {
         } else if (plateau[i][j + 1] == ma_couleur) {
             compterlibertes(i, j + 1, ma_couleur);
         }
-        else if (plateau[i-1][j]== ma_couleur)
-        {
-            visite[i-1][j]= 1;
-
-            compter_libertes_groupe(plateau, i - 1, j, ma_couleur, visite, &libertes);
-        }
-}
-
-if (i < TAILLE - 1 && visite[i + 1][j] == 0) {
-    if (plateau[i + 1][j] == VIDE) {
-        libertes++;
-    } else if (plateau[i + 1][j] == ma_couleur) {
-        visite[i + 1][j] = 1;
-        compter_libertes_groupe(plateau, i + 1, j, ma_couleur, visite, libertes);
     }
 }
 
@@ -68,7 +54,3 @@ int flood(int i, int j, int couleur) {
 
     return libertes;
 }
-
-
-
-
